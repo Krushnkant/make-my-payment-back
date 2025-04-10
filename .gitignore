@@ -28,3 +28,15 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+
+# Ignore contents of storage/logs but keep the folder
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Ignore contents of storage/app but keep the folder
+/storage/app/*
+!/storage/app/.gitkeep
+
+# Ignore contents of storage/framework but keep the folder
+/storage/framework/*
+!/storage/framework/.gitkeep
