@@ -1,15 +1,42 @@
-/node_modules
-/public/hot
-/public/storage
-/storage/*.key
-/vendor
-.env
-.env.backup
-.phpunit.result.cache
-docker-compose.override.yml
-Homestead.json
-Homestead.yaml
+/vendor/
+node_modules/
 npm-debug.log
 yarn-error.log
-/.idea
-/.vscode
+
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage/
+
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+
+# Laravel 5 & Lumen specific with changed public path
+public_html/storage
+public_html/hot
+
+storage/*.key
+.env
+Homestead.yaml
+Homestead.json
+/.vagrant
+.phpunit.result.cache
+
+/public/build
+/storage/pail
+.env.backup
+.env.production
+.phpactor.json
+auth.json
+
+# Ignore contents of storage/logs but keep the folder
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Ignore contents of storage/app but keep the folder
+/storage/app/*
+!/storage/app/.gitkeep
+
+# Ignore contents of storage/framework but keep the folder
+/storage/framework/*
+!/storage/framework/.gitkeep
