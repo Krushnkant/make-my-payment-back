@@ -254,7 +254,7 @@ class NotificationController extends Controller
 
                                         // Log::info('User logged in 3.', ['user_id' => $response]);
 
-                                        SendNotificationUser($token, $message, $title);
+                                        // SendNotificationUser($token, $message, $title);
                                     }
                                     
                                     //End send notification to user
