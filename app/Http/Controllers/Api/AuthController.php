@@ -52,7 +52,8 @@ class AuthController extends Controller
                             'is_call_feature_on' => $is_bool_call_feature,
                             'call_feature_msg' => $call_feature_msg,
                             'is_payment_feature_on' => $is_bool_payment,
-                            'payment_msg' => $payment_msg
+                            'payment_msg' => $payment_msg,
+                            'thanks_msg' => 'Thank you'
         );
         return ResponseAPI(true, 'All data retrieved successfully.',"", $reponse_data, 201);
     }
