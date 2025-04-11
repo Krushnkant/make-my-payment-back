@@ -241,19 +241,20 @@ class NotificationController extends Controller
                                 
                                 if($status == "success"){
 
-                                    logNotification($request->user_id, $request->customer_id,$request->type);
+                                    logNotification($request->user_id, $request->customer_id, $request->type);
                                     //Send notification to user
                                     $token = "";
                                     if(isset($userdata->getdevicetoken->token) && $userdata->getdevicetoken->token !== ''){
-                                        $token .= $userdata->getdevicetoken->token;
 
+                                        $token .= $userdata->getdevicetoken->token;
                                         $token = rtrim($token, ',');
-                                        $title = "Your call has been sent to ".$customer->name;
+                                        // $title = "Your call has been sent to ".$customer->name;
+                                        $title = "Your call to ".$customer->name." has been sent successfully.";
                                         $message = date('Y-m-d');
 
                                         // Log::info('User logged in 3.', ['user_id' => $response]);
 
-                                        SendNotificationUser($token,$message,$title);
+                                        SendNotificationUser($token, $message, $title);
                                     }
                                     
                                     //End send notification to user
@@ -296,13 +297,21 @@ class NotificationController extends Controller
                                 // dd($customer);
                                 $call = SendSMS($customer->phone, $customer->name, $business->bus_name, $customer->balance, $customer->native_language);
                                 // dd($call);
-                                if ($call == false || str_contains($call, "error") || str_contains($call, "ERROR")) {
+                                $responseData = json_decode($call);
+                                if($responseData->isSuccess == false){
                                     return ResponseAPI(false,'SMS sending failed. Please contact Administration. ',"",array(),401);
                                 } else {
                                     $Response_Array = explode('-', $call);
                                     $status = 'success';
-                                    $TagId = $Response_Array[1];
+                                    $TagId = 'asdasd';
                                 }
+                                // if ($call == false || str_contains($call, "error") || str_contains($call, "ERROR")) {
+                                //     return ResponseAPI(false,'SMS sending failed. Please contact Administration. ',"",array(),401);
+                                // } else {
+                                //     $Response_Array = explode('-', $call);
+                                //     $status = 'success';
+                                //     $TagId = $Response_Array[1];
+                                // }
 
                                 // if(isset($call)){
                                 //     $response=json_decode($call);

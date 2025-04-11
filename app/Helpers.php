@@ -278,6 +278,7 @@ if (! function_exists('SendSMS')) {
         $msg = '';
         $unicodeVar = '';
         $ansiCode = "%0A";
+        $templateName = "English";
         switch ($native_lang) {
             case 'BN':
                 // Success
@@ -290,6 +291,7 @@ if (! function_exists('SendSMS')) {
                 // Success
                 $msg = "Hello ".$name.", You owe Rs".$amount." to ".$sname.". Please make the payment as soon as%0Apossible. If you have already made the payment, please ignore this message. Thank%0Ayou.";
                 $msg = str_replace(' ', '%20', $msg);
+                $templateName = "5-april";
                 break;
 
             case 'GU':
@@ -304,6 +306,7 @@ if (! function_exists('SendSMS')) {
                 $msg = "नमस्ते ".$name.", आपका ".$sname." पर ".$amount." रुपये बकाया है। कृपया इसका जल्द से जल्द भुगतान करें।%0Aयदि आपने पहले ही बकाया राशि का भुगतान कर दिया है, तो कृपया ध्यान न दें। धन्यवाद।";
                 $msg = str_replace(' ', '%20', $msg);
                 $unicodeVar = "&unicode=1";
+                $templateName = "3-april";
                 break;
 
             case 'KN':
@@ -354,22 +357,64 @@ if (! function_exists('SendSMS')) {
                 break;
         }
 
-        $url = "https://prpsms.co.in/API/SendMsg.aspx?uname=20240345&pass=W999XmmR&send=TRAVNT&dest=".$to."&msg=".$msg.$ansiCode."MakeMyPayment".$unicodeVar;
-        $curl = curl_init();
+        if($native_lang == "EN" || $native_lang == "HI"){
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET'
-        ));
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            $url = "https://api.bulksmsadmin.com/BulkSMSapi/keyApiSendSMS/SendSmsTemplateName";
+            $sender = "MKMPMT";
+            $CompanyName = "MakeMyPayment";
+            if($native_lang == "EN"){
+                $templateParams = $name."~ ".$amount."~".$sname."~".$CompanyName;
+            } else {
+                $templateParams = $name."~".$sname." ~ ".$amount." ~".$CompanyName;
+            }
 
+            // Build the data array
+            $data = [
+                "sender" => $sender,
+                "templateName" => $templateName,
+                "smsReciever" => [
+                    [
+                        "mobileNo" => $to,
+                        "templateParams" => $templateParams
+                    ]
+                ]
+            ];
+            $jsonData = json_encode($data);
+
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $jsonData,
+                CURLOPT_HTTPHEADER => array(
+                    'apikey: ZcI8CoC3ju7X4ed',
+                    'Content-Type: application/json'
+                ),
+            ));
+
+        } else {
+
+            $url = "https://prpsms.co.in/API/SendMsg.aspx?uname=20240345&pass=W999XmmR&send=TRAVNT&dest=".$to."&msg=".$msg.$ansiCode."MakeMyPayment".$unicodeVar;
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'GET'
+            ));
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        }
         $response = curl_exec($curl);
 
         curl_close($curl);
